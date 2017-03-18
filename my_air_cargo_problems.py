@@ -50,22 +50,22 @@ class AirCargoProblem(Problem):
                        expr(f"At({plane}, {airport})")]
             pre_neg = []
             effect_add = [expr(f"In({cargo}, {plane})")]
-            effect_neg = [expr(f"At({cargo}, {airport})")]
+            effect_rem = [expr(f"At({cargo}, {airport})")]
 
             return Action(expr(f"Load({cargo}, {plane}, {airport})"),
                           [pre_pos, pre_neg],
-                          [effect_add, effect_neg])
+                          [effect_add, effect_rem])
 
         def _create_unload_action(cargo, plane, airport):
-            pre_pos = [expr(f"At({cargo}, {airport})"),
+            pre_pos = [expr(f"In({cargo}, {plane})"),
                        expr(f"At({plane}, {airport})")]
             pre_neg = []
             effect_add = [expr(f"At({cargo}, {airport})")]
-            effect_neg = [expr(f"In({cargo}, {plane})")]
+            effect_rem = [expr(f"In({cargo}, {plane})")]
 
             return Action(expr(f"Unload({cargo}, {plane}, {airport})"),
                           [pre_pos, pre_neg],
-                          [effect_add, effect_neg])
+                          [effect_add, effect_rem])
 
         def load_actions():
             '''Create all concrete Load actions and return a list
