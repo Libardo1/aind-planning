@@ -1,6 +1,6 @@
 # Heuristic Analysis
 
-This analysis presents a comparison of different search/planning algorithms when used on 3 different planning problems with search spaces of different size. The performance of each problem, algorithm pair is measured using the number of expanded nodes, goal tests, visited states, actions taken and execution time.
+This analysis presents a comparison of different search/planning algorithms when used on 3 planning problems with search spaces of different size. The performance of each problem, algorithm pair is measured using the number of expanded nodes, goal tests, visited states, actions taken and execution time.
 
 ## Problem 1
 
@@ -91,13 +91,13 @@ Finally, we have a winner that uses a heuristic. In this case it is `A* search w
 
 # Analysis
 
-`breadth_first_search` expands all nodes at the frontier of the search graph before going deeper. As stated in videos 10,11 in the `Search` section of the lectures, `BFS`, always considers the shortest path first. So, it gives optimal plan but it gets slower as the search space grows larger.
+`breadth_first_search` expands all nodes at the frontier of the search graph before going deeper. As stated in videos 10,11 in the `Search` section of the lectures, `BFS` always considers the shortest path first. So, it gives optimal plan but it gets slower as the search space grows larger.
 
 `depth_first_graph_search` in contrast of `BFS`, `DFS` goes as deeper as possible before considering other nodes at the frontier. As stated in section `3.4.3` of the `AIMA` book, `DFS` is not optimal. It appears that completely fails on our problems as well.
 
 `uniform_cost_search` or Cheapest-First Search is guaranteed to find the path with the cheapest total cost (Video 16, Search section). This algorithm always expands the node that has the lowest cost. The implementation reveals that it calls `best_first_graph_search`. While this method finds optimal plans it is much slower than `BFS`. While `BFS` stops after finding goal state, `uniform_cost_search` continues its search.
 
-The `A*` search (videos 27-33 in the Search section) is implemented using 3 different heuristic functions. Interestingly enough, all implementations provide an optimal plan, yet their performance differs by much. `A*` works by expanding the path that has the minimum value of the function `f`, which is defined as a sum of the `g` and `h`:
+The `A*` search (videos 27-33 in the Search section) is implemented using 3 different heuristic functions. All implementations provide an optimal plan, yet their performance differs by much. `A*` works by expanding the path that has the minimum value of the function `f`, which is defined as a sum of the `g` and `h`:
 
 $$f = g + h$$
 $$g(\text{path}) = (\text{path cost})$$
@@ -109,7 +109,9 @@ Internally, `A*` simply calls `best_first_graph_search`, `uniform_cost_search` d
 
 `h_ignore_preconditions` is the best performer. This heuristic estimates the minimum number of actions that must be carried out from the current state in order to satisfy all of the goal conditions by ignoring the preconditions required for an action to be executed. This gives a sweet spot between the too simplistic `h1` and too expensive `h_pg_levelsum`. For small search problems `BFS` is still better, though.
 
-`h_pg_levelsum` has the hardest implementation. This heuristic uses a planning graph representation of the problem state space to estimate the sum of all actions that must be carried out from the current state in order to satisfy each individual goal condition. Taking into consideration the preconditions as well is simply too expensive and this method is very slow.
+`h_pg_levelsum` was the hardest to implement. This heuristic uses a planning graph representation of the problem state space to estimate the sum of all actions that must be carried out from the current state in order to satisfy each individual goal condition. Taking into consideration the preconditions as well, it is simply too expensive and this method is very slow.
+
+One interesting observation is that number of expansions, goal tests and new nodes do not correlate perfectly with the execution time due to the complexity of the heuristic function (see `A* with h_ignore_preconditions` vs `breadth_ rst_search` in `Problem 1 and 2`).
 
 # Conclusion
 
